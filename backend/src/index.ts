@@ -6,7 +6,12 @@ import mongoSanitize from 'express-mongo-sanitize';
 import { dbConnection } from './config/db.config';
 import hpp from 'hpp';
 
+import indexRouter from './routes/index.router';
+
 import 'dotenv/config';
+import passport from 'passport';
+import expressSession from 'express-session';
+import {passportInitialize} from './middlewares/passport.middleware';
 
 const app = express();
 
@@ -22,11 +27,26 @@ app.use(helmet());
 app.use(hpp());
 app.use(cors());
 
-app.get( '/', (req: Request, res: Response) => {
+app.use(expressSession(
+    { 
+        secret: 'test123!@3',
+        resave: false,
+        saveUninitialized: true,
+        cookie: {secure: true}
+    }
+));
+
+passportInitialize();
+app.use(passport.initialize());
+app.use(passport.session());
+/* app.get( '/', (req: Request, res: Response) => {
     res.send('E Learning System');
-})
+}) */
+
+
+app.use(indexRouter);
 
 const PORT = process.env.PORT || 8082;
 app.listen(PORT, () => {
-    console.log('app server is running at port '+ PORT);
+    console.log('App server is running at port '+ PORT);
 })
