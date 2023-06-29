@@ -17,10 +17,10 @@ const app = express();
 
 dbConnection();
 
-app.use(morgan('tiny'));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+app.use(morgan('tiny'));
 app.use(mongoSanitize());
 app.use(helmet());
 

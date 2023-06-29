@@ -1,4 +1,5 @@
 import mongoose, { Document } from "mongoose"
+import { FlowNode } from "typescript";
 interface UserInterface extends Document {
     fullName: string;
     email: string;
@@ -9,5 +10,6 @@ interface UserInterface extends Document {
     resetPasswordExpired: Date;
     jwt: string;
     fcm: string;
+    matchPassword: Function;
 }
 export default UserInterface;
