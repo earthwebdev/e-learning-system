@@ -18,11 +18,16 @@ router.get('/google/callback', (req, res, next) => {
             return next(err);
         }
         //next();
+        /* console.log(user.email);
+        return; */
         const secretKey: string = process.env.JWT_SECRT_KEY ?? '';
 
-        const token: any = jwt.sign(user["_json"].email, secretKey);
+        const token: any = jwt.sign(user.email, secretKey); //user["_json"].email
+        const role = user.roles;
         res.cookie('jwtToken', token);
-        res.redirect(`${process.env.CLIENT_URL}/dashboard`)
+        res.cookie('role', role);
+        res.redirect(`${process.env.CLIENT_URL}/dashboard`);
+        next();
     })(req, res, next)
 })
 /* router.get('/auth/google/callback', passport.authenticate('google',  {

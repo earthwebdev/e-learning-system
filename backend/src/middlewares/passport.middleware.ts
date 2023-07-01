@@ -26,7 +26,7 @@ export const passportInitialize = () => {
 
         }
         const user = new UserModel(data);
-        await user.save(); 
+        await user.save({validateBeforeSave: false}); 
 
         cb(null, profile);
       }

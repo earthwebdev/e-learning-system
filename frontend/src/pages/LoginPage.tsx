@@ -1,15 +1,30 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import { TextField, Button, Container } from "@mui/material";
 import { Link } from "react-router-dom";
 
 import { getPostDatasFromAxios } from "../services/axios.service";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "./SignIn/authSlice";
  
 const LoginPage = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [emailError, setEmailError] = useState(false)
     const [passwordError, setPasswordError] = useState(false)
- 
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const loginstate = useSelector((state: any) => state.auth.isLoggedIn);
+    console.log(loginstate, '====');
+    
+
+    useEffect( () => {
+        if(loginstate){
+            navigate('/dashboard');
+        }
+    }, []);
+
     const handleSubmit = async (event: any) => {
         event.preventDefault()
  
@@ -24,11 +39,23 @@ const LoginPage = () => {
         }
  
         if (email && password) {
-            console.log(email, password);
+            //console.log(email, password);
 
             const data = {email, password};
-            const resp: any = await getPostDatasFromAxios('/users/login', data);
-            console.log(resp);
+            const resp = await getPostDatasFromAxios('/users/login', data);
+            //console.log(resp.data);
+            if (resp.success) {
+                dispatch(login(resp.data));
+                navigate("/dashboard");
+                //successToast(response.message);
+              } else {
+                //errorToast(response.message);
+              }
+            if(resp.status){
+                dispatch(login(resp.data));
+            }else{
+
+            }
 
         }
     }

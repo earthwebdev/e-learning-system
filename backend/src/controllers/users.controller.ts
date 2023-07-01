@@ -24,7 +24,7 @@ export const userLoginController = async (req: Request, res: Response) => {
             const JWT_SECRT_KEY: string = process.env.JWT_SECRT_KEY ?? '';
             const token = jwt.sign({email:user.email}, JWT_SECRT_KEY, { expiresIn: '3d'});
 
-            const updatedUser = await UserModel.findOneAndUpdate(
+            const updatedUser: any = await UserModel.findOneAndUpdate(
                 { _id: user._id },
                 { $set: { jwt: token } },
                 { new: true }
@@ -32,7 +32,11 @@ export const userLoginController = async (req: Request, res: Response) => {
       
             return res.status(200).json({
                 success: true,
-                token: token,
+                data:
+                {
+                    jwt: updatedUser.jwt,
+                    role: updatedUser.roles
+                },
                 message: "User  logged in successfully.",
               });
         }
@@ -78,3 +82,11 @@ export const userRegisteredController = async (req: Request, res: Response) => {
     
     
 }
+
+//admin user part start here
+
+export const getUsersListForAdmin = (req: Request, res: Response) => {
+    console.log(req.user);
+}
+
+//admin user part end here

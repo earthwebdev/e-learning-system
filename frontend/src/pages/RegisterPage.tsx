@@ -1,11 +1,12 @@
 //local signup functions
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { TextField, Button, Container, Stack } from '@mui/material';
 import { Link } from "react-router-dom"
 import { getPostDatasFromAxios } from '../services/axios.service';
 import { useNavigate } from 'react-router-dom';
 //google auth to use for the signup 
 import { GoogleLogin } from '@react-oauth/google';
+import { useSelector } from 'react-redux';
 
 
 const RegisterPage = () => {
@@ -21,6 +22,13 @@ const RegisterPage = () => {
     window.location.href = SERVER_URL + '/auth/google';
   });
 
+  const loginstate = useSelector((state: any) => state.auth.isLoggedIn);   
+
+    useEffect( () => {
+        if(loginstate){
+            navigate('/dashboard');
+        }
+    }, []);
   
      const  handleSubmit = async (event: any) => {
       event.preventDefault();

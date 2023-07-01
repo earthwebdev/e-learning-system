@@ -8,7 +8,8 @@ export const getPostDatasFromAxios = async(url: string, data: any) => {
         //console.log(responseData);
         return response.data;
         
-    } catch (error) {
-        return error;    
+    } catch (error: any) {
+        //return error;    
+        return (error.response.data.message);
     }
 }

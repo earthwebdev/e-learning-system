@@ -1,6 +1,4 @@
-import express, {Request, Response} from 'express';
-import passport from 'passport';
-import jwt from 'jsonwebtoken';
+import express from 'express';
 import userRouter from './user.router';
 import authRouter from './auth.router';
 
