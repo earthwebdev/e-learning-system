@@ -4,5 +4,6 @@ interface LectureInterface extends Document {
     content: string;
     duration: number;
     lectureUrl: string;
+    public_id: string;
 }
 export default LectureInterface;

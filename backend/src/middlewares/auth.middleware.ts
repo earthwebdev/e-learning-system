@@ -38,7 +38,7 @@ export const authorize = (...roles: any) => async (req: Request, res: Response, 
     const reqUser: any = req.user ?? '';
     //const email = reqUser.email ?? '';
     //const user: any = await UserModel.findOne({email}).select('roles');
-    //console.log(reqUser?.roles);
+    console.log(reqUser?.roles, roles);
     if(! roles.includes(reqUser?.roles)){
         res.status(401).json({
             status: false,
