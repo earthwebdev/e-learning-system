@@ -15,10 +15,29 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
     if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')){        
         const token: string = req.headers.authorization.split(' ')[1];
         const secret_key: string = process.env.JWT_SECRT_KEY ?? "";
-        const verifyUser: any = jwt.verify(token, secret_key);    
+        //console.log(token, secret_key);
+        //const verifyUser: any = jwt.verify(token, secret_key);    
         //const user = await UserModel.findOne({jwt: token});
         //console.log(verifyUser);
-        if(verifyUser){
+        try {
+            jwt.verify(token, secret_key, async (err, decode: any) => {
+                //console.log(decode);
+                if (err) { 
+                    //console.log('not worked');
+                    return res.status(401).json({ staus:false, message: err.message}); 
+                }
+                const user: any = await UserModel.findOne({email: decode.email}).select('-password');
+                req.user = user;
+                return next(); 
+            })
+        } catch (error: any) {
+            //console.log('not workingssss');
+            return res.status(401).json({
+                status: false,
+                message: error.message
+            });
+        }
+        /* if(verifyUser){
             const user: any = await UserModel.findOne({email: verifyUser.email}).select('-password');
             req.user = user;
             //console.log(req.user);
@@ -28,7 +47,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
                 status: false,
                 message: 'You are not authorised to access this resource.'
             })
-        }
+        } */
     }
 }
 
@@ -38,7 +57,7 @@ export const authorize = (...roles: any) => async (req: Request, res: Response, 
     const reqUser: any = req.user ?? '';
     //const email = reqUser.email ?? '';
     //const user: any = await UserModel.findOne({email}).select('roles');
-    console.log(reqUser?.roles, roles);
+    //console.log(reqUser?.roles, roles);return;
     if(! roles.includes(reqUser?.roles)){
         res.status(401).json({
             status: false,

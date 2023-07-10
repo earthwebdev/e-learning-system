@@ -101,7 +101,7 @@ export const updateLectures = async (req: Request, res: Response) => {
             }) 
         }
 
-        const lecture = await LectureModel.findOne({_id:id});
+        const lecture: any = await LectureModel.findOne({_id:id}) ;
 
         if(!lecture){
             return res.status(400).json({
@@ -110,7 +110,7 @@ export const updateLectures = async (req: Request, res: Response) => {
             });
         }
 
-        const {title, content, duration} = req.body;
+        const {title, content, duration, isSubmitted} = req.body;
         if(!title || !content || !duration){
             return res.status(400).json({
                 status: false,
@@ -118,7 +118,8 @@ export const updateLectures = async (req: Request, res: Response) => {
             })
         }
         let cloudinaryData;
-        if (req?.file) {
+        
+        if (req?.file && isSubmitted) {
             const pathVideo = req?.file?.path ?? '' ;
             const uploadFileType = req?.file?.mimetype.split("/")[0];
             if(uploadFileType === 'video'){
@@ -138,9 +139,9 @@ export const updateLectures = async (req: Request, res: Response) => {
                     console.log("File deleted successfully!");
                 });
 
-                if(lecture.public_id.startsWith('videos')){
+                if(lecture?.public_id.startsWith('videos')){
                     //console.log(lecture.public_id, 'starts');                                
-                    await cloudinary.v2.uploader.destroy( lecture.public_id, { resource_type: 'video'});                
+                    await cloudinary.v2.uploader.destroy( lecture?.public_id, { resource_type: 'video'});                
                 }
                 else{
                     await cloudinary.v2.uploader.destroy( lecture.public_id);                

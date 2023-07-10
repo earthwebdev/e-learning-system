@@ -18,10 +18,12 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 
+import { useNavigate } from 'react-router-dom';
 
 import HomeIcon from '@mui/icons-material/Home';
 import CastForEducationIcon from '@mui/icons-material/CastForEducation';
 import ViewListIcon from '@mui/icons-material/ViewList';
+import DvrIcon from '@mui/icons-material/Dvr';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -103,6 +105,8 @@ export default function Sidebar() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
+  const navigate = useNavigate();
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -141,14 +145,15 @@ export default function Sidebar() {
         </DrawerHeader>
         <Divider />
         <List>
-          {['Home', 'Courses', 'Sections', 'Order'].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: 'block' }}>
-              <ListItemButton
+          {['Home', 'Courses', 'Sections', 'Lectures', 'Order'].map((text, index) => (
+            <ListItem key={text} onClick={(e) => {e.preventDefault(); navigate(text.toLocaleLowerCase())}} disablePadding sx={{ display: 'block' }}>
+              <ListItemButton                
                 sx={{
                   minHeight: 48,
                   justifyContent: open ? 'initial' : 'center',
                   px: 2.5,
                 }}
+                
               >
                 <ListItemIcon
                   sx={{
@@ -157,7 +162,7 @@ export default function Sidebar() {
                     justifyContent: 'center',
                   }}
                 >                    
-                  {index === 0 ? <HomeIcon />: (index === 1 ? <CastForEducationIcon />:(index === 2 ? <ViewListIcon />: <AddShoppingCartIcon /> ))}
+                  {index === 0 ? <HomeIcon />: (index === 1 ? <CastForEducationIcon />:(index === 2 ? <ViewListIcon />:(index === 3 ? <DvrIcon />: <AddShoppingCartIcon /> )))}
                 </ListItemIcon>
                 <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
@@ -167,7 +172,7 @@ export default function Sidebar() {
         <Divider />
         <List>
           {['Inbox', 'Profile', 'Logout'].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: 'block' }}>
+            <ListItem onClick={(e) => {e.preventDefault(); navigate(text.toLocaleLowerCase())}} key={text} disablePadding sx={{ display: 'block' }}>
               <ListItemButton
                 sx={{
                   minHeight: 48,

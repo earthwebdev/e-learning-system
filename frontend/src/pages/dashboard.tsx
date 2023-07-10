@@ -7,9 +7,9 @@ import { login } from "./SignIn/authSlice";
 const dashboardPage = () => {
   const dispatch = useDispatch();
   
-  const jwt = getCookie("jwtToken");
-  const role = getCookie("role");
-  console.log(jwt, role);
+  const jwt = getCookie("jwtToken") || '';
+  const role = getCookie("role") || '';
+  //console.log(jwt, role);
   const data = {
     jwt, role
   }

@@ -1,7 +1,12 @@
 import { Request, Response } from "express"
 import UserModel from "../models/users.model";
 import jwt from 'jsonwebtoken';
-import crypto from 'crypto';
+
+interface CustomRequest1 extends Request {
+    user: {
+        email: string
+    },
+}
 
 export const userLoginController = async (req: Request, res: Response) => {
     try {
@@ -83,10 +88,41 @@ export const userRegisteredController = async (req: Request, res: Response) => {
     
 }
 
-//admin user part start here
+//for the logout user
+export const userLogoutController = async(req: any, res: Response) => {
+    //console.log(req?.user?.email);
+    const email = req?.user?.email;
+    if(email){
+        const user = await UserModel.findOne({email});
 
-export const getUsersListForAdmin = (req: Request, res: Response) => {
+        if(user){
+            const updatedUser: any = await UserModel.findOneAndUpdate(
+                { _id: user._id },
+                { $set: { jwt: '' } },
+                { new: true }
+              );
+      
+            return res.status(200).json({
+                success: true,                
+                message: "User logout successfully.",
+            });
+        }
+        return res.status(200).json({
+            success: true,                
+            message: "User logout successfully.",
+        });
+    }
+}
+//admin user part start here
+export const getUsersListForAdmin = async (req: any, res: Response) => {
     console.log(req.user);
+    const email = req?.user?.email ?? '';
+    const user = await UserModel.findOne({email: email});
+    
+    console.log(user);
+    if(user){
+        
+    }
 }
 
 //admin user part end here
