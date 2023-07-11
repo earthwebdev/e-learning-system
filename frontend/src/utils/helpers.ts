@@ -4,7 +4,10 @@ export const getJWTToken = () => {
     const { jwt } = useSelector((state: any) => state.auth);
     return jwt;
 }
-
+export const getLoggedIn = () => {
+    const { isLoggedIn } = useSelector((state: any) => state.auth);
+    return isLoggedIn;
+}
 export const getRole = () => {
     const { role } = useSelector((state: any) => state.auth);
     return role;
