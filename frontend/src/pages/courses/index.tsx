@@ -50,7 +50,7 @@ const CoursesPage = () => {
         }
     }
 
-    const deleteLecture = async (id: any) => {
+    const deleteCourse = async (id: any) => {
         //console.log(id);
         const response = await deleteDataFromAxios(`/courses/${id}`, jwt);
         //console.log(response);
@@ -84,20 +84,20 @@ const CoursesPage = () => {
 
                 <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
                 {
-                    courses && courses.length > 0 && courses.map((lecture: any) => {
+                    courses && courses.length > 0 && courses.map((course: any) => {
                         return (
-                            <Card key={lecture._id} className='bg-white shadow-lg mr-2'>
+                            <Card key={course._id} className='bg-white shadow-lg mr-2'>
                                 <CardContent>
                                     <div className="flex justify-between items-center mb-2">
-                                        <Typography variant='h6'>{lecture.title.length > 15?lecture.title.slice(0,15)+'...':lecture.title}</Typography>
+                                        <Typography variant='h6'>{course.title.length > 15?course.title.slice(0,15)+'...':course.title}</Typography>
                                         {
                                             accessRole && 
                                                 (
                                                     <div>
-                                                        <IconButton color='primary' className='mr-2' onClick={(e) => {e.preventDefault();editLecture(lecture._id)}}>
+                                                        <IconButton color='primary' className='mr-2' onClick={(e) => {e.preventDefault();editCourses(course._id)}}>
                                                             <EditIcon />
                                                         </IconButton>
-                                                        <IconButton color='error' onClick={(e) => {e.preventDefault();deleteLecture(lecture._id)}}>
+                                                        <IconButton color='error' onClick={(e) => {e.preventDefault();deleteCourse(course._id)}}>
                                                             <DeleteIcon />
                                                         </IconButton>
                                                     </div>                                            
@@ -108,19 +108,19 @@ const CoursesPage = () => {
                                     </div>
 
                                     <Typography variant='subtitle1'>
-                                        Duration: {lecture.duration} days
+                                        Duration: {course.duration} days
                                     </Typography>
                                     <Typography variant='body1' className='mb-4'>
-                                    {lecture.content.length > 30?lecture.content.slice(0,30)+'...':lecture.content}
+                                    {course.content.length > 30?course.content.slice(0,30)+'...':course.content}
                                     </Typography>
                                     <div className="aspect-w-16">
                                         {
-                                            lecture.public_id && lecture.public_id.startsWith('videos')? (
+                                            course.public_id && course.public_id.startsWith('videos')? (
                                                 <video controls className="object-cover w-full h-full">
-                                                    <source src={lecture.lectureUrl}></source>
+                                                    <source src={course.courseUrl}></source>
                                                 </video>
                                             ): (
-                                                <img className="w-50" src={lecture.lectureUrl} />
+                                                <img className="w-50" src={course.lectureUrl} />
                                             )
                                         }
                                         

@@ -3,6 +3,7 @@ import { getLoggedIn } from '../utils/helpers';
 
 const SecureRoutesPage = () => {
     const isLoggedIn = getLoggedIn();
+    //console.log(isLoggedIn);
     return <>
         { isLoggedIn ? <Outlet /> : <Navigate to={'/'} />}
     </>    

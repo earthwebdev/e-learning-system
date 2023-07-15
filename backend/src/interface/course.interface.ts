@@ -4,9 +4,9 @@ interface CourseInterface extends Document {
     description: string;
     instructorId: mongoose.Schema.Types.ObjectId;
     price: number;
-    durutaion: number;
+    duration: number;
     enrolledStudent: mongoose.Schema.Types.ObjectId[];
-    section: mongoose.Schema.Types.ObjectId[];
+    sections: mongoose.Schema.Types.ObjectId[];
     categories: string[];
     content: string[];
 }

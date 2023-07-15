@@ -18,7 +18,7 @@ const courseSchema = new mongoose.Schema<CourseInterface>({
         type: Number,
         required: true,
     },
-    durutaion: {
+    duration: {
         type: Number,
         required: true,
     },
@@ -31,7 +31,7 @@ const courseSchema = new mongoose.Schema<CourseInterface>({
                 }
             ],
     },
-    section:  
+    sections:  
         [
             {
                 type: mongoose.Schema.Types.ObjectId, 

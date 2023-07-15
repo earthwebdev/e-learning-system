@@ -29,6 +29,7 @@ import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { Outlet } from 'react-router-dom';
+import { getRoleAccess } from '../utils/helpers';
 
 const drawerWidth = 240;
 
@@ -105,6 +106,9 @@ export default function Sidebar() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
+  const [menuList, setMenuList] = React.useState(['Dashboard', 'Courses', 'Sections', 'Lectures', 'Order']);
+  const getRole = getRoleAccess('student');
+  
   const navigate = useNavigate();
 
   const handleDrawerOpen = () => {
@@ -115,6 +119,9 @@ export default function Sidebar() {
     setOpen(false);
   };
 
+  React.useEffect(() => {
+    getRole && setMenuList(['Dashboard', 'Courses']);
+  }, []);
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -129,11 +136,11 @@ export default function Sidebar() {
               marginRight: 5,
               ...(open && { display: 'none' }),
             }}
-          >
+          >            
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            Mini variant drawer
+            Mini variant drawer for E-Learning App
           </Typography>
         </Toolbar>
       </AppBar>
@@ -145,7 +152,7 @@ export default function Sidebar() {
         </DrawerHeader>
         <Divider />
         <List>
-          {['Home', 'Courses', 'Sections', 'Lectures', 'Order'].map((text, index) => (
+          {menuList.map((text, index) => (
             <ListItem key={text} onClick={(e) => {e.preventDefault(); navigate(text.toLocaleLowerCase())}} disablePadding sx={{ display: 'block' }}>
               <ListItemButton                
                 sx={{

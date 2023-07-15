@@ -12,6 +12,8 @@ import AddLecturesPage from './pages/lectures/add'
 import EditLecturesPage from './pages/lectures/edit'
 import LogoutPage from './pages/logout';
 import CoursesPage from './pages/courses';
+import PrivateRoutes from './routes/PrivateRoutes';
+import CourseAddPage from './pages/courses/add';
 
 function App() {
 
@@ -21,11 +23,14 @@ function App() {
             <Route path='/' element={<LoginPage />} />
             <Route path='/register' element={<RegisterPage />} />
             <Route path='/' element={<SecureRoutes />}>
-              <Route path='/' element={<Sidebar />}>
-                <Route path='/dashboard' element={<DashboardPage />} />
-                <Route path='/lectures' element={<LecturesPage />} />
-                <Route path='/lectures/add' element={<AddLecturesPage />} />
-                <Route path='/lectures/:id' element={<EditLecturesPage />} />
+                <Route path='/' element={<Sidebar />}>
+                  <Route path='/dashboard' element={<DashboardPage />} />
+                  <Route path='/' element={<PrivateRoutes />} >
+                    <Route path='/lectures' element={<LecturesPage />} />
+                    <Route path='/lectures/add' element={<AddLecturesPage />} />
+                    <Route path='/lectures/:id' element={<EditLecturesPage />} />
+                    <Route path='/courses/add' element={<CourseAddPage />} />
+                  </Route>
                 <Route path='/courses' element={<CoursesPage />} />
                 <Route path='/logout' element={<LogoutPage />} />
               </Route>
