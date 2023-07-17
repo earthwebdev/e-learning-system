@@ -1,4 +1,4 @@
-import { mixed, number, object, string } from "yup";
+import * as yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { successToast, errorToast } from "../../services/toastify.service";
 import { getJWTToken } from "../../utils/helpers";
@@ -8,49 +8,56 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from "react";
 
 const EditSectionsPage = () => {
-    const [course, setCourse] = useState<any>({});    
+    const [section, setSection] = useState<any>({});    
     
     const navigate = useNavigate();
     const token = getJWTToken();
     const {id} = useParams();
-    const getCourseData = async() => {
-        const response = await getDatasFromAxios(`/courses?_id[eq]=${id}`, token);
-        //console.log(response);
+    const getSectionData = async() => {
+        const response = await getDatasFromAxios(`/sections/${id}`, token);
+        console.log(response);
         if(response.status){
-            setCourse(response);
+            setSection(response);
           //return response.data;
         }
         else{
-          errorToast('Course id not found');
-          navigate('/courses');
+          errorToast('Section id not found');
+          navigate('/sections');
         }
         
     }
-    const courseValidationSchema = object().shape({
-        title: string().required('Title is required'),
-        description: string().required('Description is required'),
-        duration: number().required('Duration is required'),
-        price: number().required('Price is required')
-    });
+    const sectionValidationSchema = yup.object().shape({        
+        title: yup.string().required('Section title is require'),
+        lectures : yup.array().of(
+            yup.object(
+                {
+                    title: yup.string().required('Lecture title is require'),
+                    content: yup.string().required('Lecture content is require'),
+                    duration: yup.number().required('Lecture duration is require'),
+                    file: yup.string().required('Lecture file is require'),
+                }
+            )
+        )            
+      });
     
     //const handleSubmit = (values: any, {setSubmitting}: any)=> {
     const handleSubmit = async (values: any, {setSubmitting}: any) => {
         try {
-            const dataCourse: any = {};
+            const dataSection: any = {};
             /* console.log('tested');
             console.log(values); */            
             //const formData = new FormData();
-            dataCourse.title = values.title;
-            dataCourse.description = values.description;
-            dataCourse.duration = values.duration;
-            dataCourse.price = values.price;
+            dataSection.title = values.title;
+            dataSection.description = values.description;
+            dataSection.duration = values.duration;
+            dataSection.price = values.price;
                                     
-            console.log(dataCourse);//return;
+            console.log(dataSection);//return;
 
-            const response: any = await patchDataWithJWT(`/courses/${id}`, dataCourse, token);
+            const response: any = await patchDataWithJWT(`/sections/${id}`, dataSection, token);
             if (response.status) {
                 successToast(response.message);
-                navigate("/courses");
+                navigate("/sections");
             }
             //write all logics above here
             setSubmitting(false);
@@ -60,21 +67,18 @@ const EditSectionsPage = () => {
         }            
     }
     useEffect( () => {
-      getCourseData();   
+      getSectionData();   
     }, [] );
    
    return (         
         <div className="max-w-md mx-auto">
-            <h2 className="text-xl font-bold mb-4">Edit Course</h2>
+            <h2 className="text-xl font-bold mb-4">Edit Section</h2>
                 
                 {
-                    course.status && (
+                    section.status && (
                         <Formik initialValues={{
-                                        title: course.data[0].title,
-                                        description: course.data[0].description,
-                                        duration: course.data[0].duration,
-                                        price: course.data[0].price,                                    
-                                        }} validationSchema={ courseValidationSchema } onSubmit={handleSubmit} >
+                                        title: section.data.title,                                                                            
+                                        }} validationSchema={ sectionValidationSchema } onSubmit={handleSubmit} >
                             {({ values, isSubmitting }: any) => { 
                                     return(
                                         <Form>
@@ -84,7 +88,7 @@ const EditSectionsPage = () => {
                                                 <ErrorMessage name="title" component="div" className="text-red-500 mt-1" />
                                             </div>
 
-                                            <div className="mb-4">
+                                            {/* <div className="mb-4">
                                                 <label htmlFor="description" className="block mb-2">Description</label>
                                                 <Field value={values.description} component="textarea" className="w-full border px-4 py-2" name="description" id="description" placeholder="Enter the description " />
                                                 <ErrorMessage name="description" component="div" className="text-red-500 mt-1" />
@@ -100,7 +104,7 @@ const EditSectionsPage = () => {
                                                 <label htmlFor="price" className="block mb-2">Price</label>
                                                 <Field value={values.price} className="w-full border px-4 py-2" id="price" name="price" placeholder="Enter the price " />
                                                 <ErrorMessage name="price" component="div" className="text-red-500 mt-1" />
-                                            </div>
+                                            </div> */}
 
                                             {/* <div className="mb-4">
                                                 {
@@ -126,7 +130,7 @@ const EditSectionsPage = () => {
                                             <button type="submit"
                                                 className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4"
                                             >
-                                                {isSubmitting ? "Updating..." : "Update Course"}
+                                                {isSubmitting ? "Updating..." : "Update Section"}
                                             </button> 
                                         </Form>
                                     );

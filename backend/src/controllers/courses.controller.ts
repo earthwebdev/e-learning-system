@@ -41,8 +41,12 @@ export const getCourseById = async (req: any, res: Response) => {
                 data: course
             })
         }
-    } catch (error) {
-        console.log(error)
+    } catch (error: any) {
+        console.log(error);
+        res.status(400).json({
+            status: false,
+            message: error.message,
+        });
     }
 }
 
