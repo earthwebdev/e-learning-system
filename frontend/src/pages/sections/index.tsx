@@ -17,8 +17,8 @@ import { useLocation } from "react-router-dom";
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../cart/cartSlice';
 
-const CoursesPage = () => {
-    const [courses, setCourses] = useState([]);
+const SectionPage = () => {
+    const [sections, setSections] = useState([]);
     const [pagination, setPagination] = useState<any>({});
     const [errorsData, setErrorsData] = useState('');
     const navigate = useNavigate();
@@ -41,8 +41,8 @@ const CoursesPage = () => {
 
     const accessRoleStudent: boolean = getRoleAccess('student');
 
-    const editCourses= (id: any) => {
-        navigate(`/courses/${id}`);
+    const editSections= (id: any) => {
+        navigate(`/sections/${id}`);
     }
 
     const handleAddToCart = (product: any) => {
@@ -51,24 +51,24 @@ const CoursesPage = () => {
         navigate('/cart');
     }
 
-    const getDataOfCourses = async () => {
-        const response = await getDatasFromAxios(`/courses?${queryUrl}`, jwt);
+    const getDataOfSections = async () => {
+        const response = await getDatasFromAxios(`/sections?${queryUrl}`, jwt);
         console.log(response);
         if(response.status){
-            setCourses(response.data);
+            setSections(response.data);
             setPagination(response.pagination);
         } else {
             setErrorsData(response);
         }
     }
 
-    const deleteCourse = async (id: any) => {
+    const deleteSection = async (id: any) => {
         //console.log(id);
-        const response = await deleteDataFromAxios(`/courses/${id}`, jwt);
+        const response = await deleteDataFromAxios(`/sections/${id}`, jwt);
         //console.log(response);
         if(response.status){
-            //setCourses(response.data);
-            getDataOfCourses();
+            //setSections(response.data);
+            getDataOfSections();
             successToast(response.message);
         } else {
             errorToast(response.message);
@@ -76,7 +76,7 @@ const CoursesPage = () => {
     }
 
     useEffect(() => {
-        getDataOfCourses();
+        getDataOfSections();
     }, [page])
 
   return (
@@ -84,11 +84,11 @@ const CoursesPage = () => {
         <div className="container mx-auto px-4 py-8">
             <Typography variant='h4' gutterBottom>
                 <div className=''>
-                    <span>Courses</span>
+                    <span>Sections</span>
                     {
                         accessRole && 
                             (
-                                <Button variant="contained" className="float-right mb-4" onClick={(e) => {e.preventDefault(); navigate("/courses/add"); } }>Add</Button>
+                                <Button variant="contained" className="float-right mb-4" onClick={(e) => {e.preventDefault(); navigate("/sections/add"); } }>Add</Button>
                             )
                     }
                     
@@ -96,53 +96,53 @@ const CoursesPage = () => {
             </Typography>        
                 <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
                 {
-                    courses && courses.length > 0 && courses.map((course: any) => {
+                    sections && sections.length > 0 && sections.map((section: any) => {
                         return (
-                            <Card key={course._id} className='bg-white shadow-lg mr-2'>
+                            <Card key={section._id} className='bg-white shadow-lg mr-2'>
                                 <CardContent>
                                     <div className="flex justify-between items-center mb-2">
-                                        <Typography variant='h6'>{course.title.length > 15?course.title.slice(0,15)+'...':course.title}</Typography>
+                                        <Typography variant='h6'>{section.title.length > 15?section.title.slice(0,15)+'...':section.title}</Typography>
                                         {
                                             accessRole && 
                                                 (
                                                     <div>
-                                                        <IconButton color='primary' className='mr-2' onClick={(e) => {e.preventDefault();editCourses(course._id)}}>
+                                                        <IconButton color='primary' className='mr-2' onClick={(e) => {e.preventDefault();editSections(section._id)}}>
                                                             <EditIcon />
                                                         </IconButton>
-                                                        <IconButton color='error' onClick={(e) => {e.preventDefault();deleteCourse(course._id)}}>
+                                                        <IconButton color='error' onClick={(e) => {e.preventDefault();deleteSection(section._id)}}>
                                                             <DeleteIcon />
                                                         </IconButton>
                                                     </div>                                            
                                                 )
                                         }
-                                        {
+                                        {/* {
                                             accessRoleStudent && 
                                             (
                                                 <div>                                                    
-                                                    <Button className='mr-2' variant="text" onClick={(e) => {e.preventDefault();handleAddToCart(course)} } >
+                                                    <Button className='mr-2' variant="text" onClick={(e) => {e.preventDefault();handleAddToCart(section)} } >
                                                         <AddShoppingCartIcon /> <span className='p'>Add to cart</span>
                                                     </Button>
                                               </div>
                                             )
-                                        }
+                                        } */}
                                          
 
                                     </div>
 
-                                    <Typography variant='subtitle1'>
-                                        Duration: {course.duration} days
+                                    {/* <Typography variant='subtitle1'>
+                                        Duration: {section.duration} days
                                     </Typography>
                                     <Typography variant='body1' className='mb-4'>
-                                    {course.description.length > 30?course.description.slice(0,30)+'...':course.description}
-                                    </Typography>
+                                    {section.description.length > 30?section.description.slice(0,30)+'...':section.description}
+                                    </Typography> */}
                                     {/* <div className="aspect-w-16">
                                         {
-                                            course.public_id && course.public_id.startsWith('videos')? (
+                                            section.public_id && section.public_id.startsWith('videos')? (
                                                 <video controls className="object-cover w-full h-full">
-                                                    <source src={course.courseUrl}></source>
+                                                    <source src={section.sectionUrl}></source>
                                                 </video>
                                             ): (
-                                                <img className="w-50" src={course.lectureUrl} />
+                                                <img className="w-50" src={section.lectureUrl} />
                                             )
                                         }
                                         
@@ -157,7 +157,7 @@ const CoursesPage = () => {
                 }
                 
                 {
-                    courses.length < 1 && (
+                    sections.length < 1 && (
                             <>
                                 {errorsData}
                             </>
@@ -173,7 +173,7 @@ const CoursesPage = () => {
                                     pagination.prev && (
                                         <li>
                                         <a className="relative block rounded bg-transparent px-3 py-1.5 text-sm text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white"
-                                        href="#" onClick={(e) => {e.preventDefault();navigate(`/courses?page=${pagination.prev.page}&limit=${pagination.prev.limit}`)}} >
+                                        href="#" onClick={(e) => {e.preventDefault();navigate(`/sections?page=${pagination.prev.page}&limit=${pagination.prev.limit}`)}} >
                                             <ArrowBackIosIcon />
                                         </a>
                                     </li>
@@ -184,7 +184,7 @@ const CoursesPage = () => {
 
                                     <li>
                                         <a className="relative block rounded bg-transparent px-3 py-1.5 text-sm text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white"
-                                        href="#" onClick={(e) => {e.preventDefault();navigate(`/courses?page=${pagination.next.page}&limit=${pagination.next.limit}`)}} >
+                                        href="#" onClick={(e) => {e.preventDefault();navigate(`/sections?page=${pagination.next.page}&limit=${pagination.next.limit}`)}} >
                                             <ArrowForwardIosIcon />
                                         </a>
                                     </li>                                            
@@ -206,4 +206,4 @@ const CoursesPage = () => {
   )
 }
 
-export default CoursesPage
+export default SectionPage

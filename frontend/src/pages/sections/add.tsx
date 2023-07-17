@@ -54,7 +54,7 @@ const initialValues: any = {
     },
   ],
 };
-function CourseAddPage() {
+function SectionAddPage() {
   const [activeStep, setActiveStep] = useState(0);
     const navigate = useNavigate();
     const token = getJWTToken();   
@@ -398,4 +398,4 @@ function CourseAddPage() {
 }
 
 
-export default CourseAddPage
+export default SectionAddPage

@@ -10,7 +10,8 @@ export const getPostDatasFromAxios = async(url: string, data: any) => {
         return response.data;
         
     } catch (error: any) {
-        //return error;    
+        //return error; 
+        //errorToast(error.response.data.message);   
         return (error.response.data.message);
     }
 }
@@ -44,7 +45,7 @@ export const patchDataWithJWT = async(url: string, data: any, jwtToken: string) 
 }
 
 export const getDatasFromAxios = async(url: string, jwtToken: string) => {
-    console.log(jwtToken);
+    //console.log(jwtToken);
     //console.log(API_URL);
     try {
         const response = await axios.get(SERVER_API_URL+url, {

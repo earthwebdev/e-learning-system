@@ -24,20 +24,52 @@ export const getCourses = async (req: Request, res: any) => {
     
 }
 
+export const getCourseById = async (req: any, res: Response) => {
+    try {
+        const id = req.params.id;
+        const course = await CourseModel.findById(id);
+        if (!course) {
+            res.status(400).json({
+                status: false,
+                message: 'Not found course',
+            });
+        } else {
+
+            res.status(200).json({
+                status: true,
+                message: 'Course fetched successfully',
+                data: course
+            })
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export const addCourses = async (req: Request, res: Response) => {
     try{
         const files: any = req.files;
-        console.log(req.body, files[1]);//return;
-        const {title, description, duration, price} = req.body;
+        //console.log(req.body, files[1]);//return;
+        const {title, description, price, duration, sections, categories, content} = req.body;
         if(!title || !description || !duration || !price){
             return res.status(400).json({
                 status: false,
                 message: 'Please enter title, description, price and duration.'
             });
         }
-        const sections: any = req.body.sections;
+        const usersData: any = req.user;
+        const instructorId = usersData?._id ?? 0;
         //console.log(sections, sections.length, sections[0].lectures.length);return;
-        const course = new CourseModel(req.body);
+        const course = new CourseModel({
+            title,
+            description,
+            instructorId,
+            price,
+            duration,
+            sections: [],
+            categories,
+            content
+        });
         await course.save();
         
         if(!course){
@@ -48,14 +80,15 @@ export const addCourses = async (req: Request, res: Response) => {
         } 
 
         if(sections.length > 0){
-            let courseDataForSections = [];
+            //let courseDataForSections = [];
             for(let i=0; i< sections.length;i++){
                 //console.log(sections[i], sections[i].lectures);return;
-                console.log(sections[i]);
+                //console.log(sections[i]);
                 const sectionTitle = sections[i].title;
                 const sectData = {
-                    title: sectionTitle
-                }
+                    title: sectionTitle,
+                    lectures: []
+                }                
                 const section = new SectionModel(sectData);
                 await section.save();                
                 if(!section){
@@ -64,12 +97,12 @@ export const addCourses = async (req: Request, res: Response) => {
                         message: 'Section creation failed.'
                     });
                 }
-                courseDataForSections.push(section._id);
+                //courseDataForSections.push(section._id);
                 let cloudinaryData;
                 let secure_url, public_id;
                 const lectures: any = sections[i].lectures;
-                console.log(lectures);
-                let sectionDataForLectures = [];
+                //console.log(lectures);
+                
                 if(lectures.length > 0){
                     for(let y=0; y< lectures.length;y++){
                         const lectureTitle = lectures[y].title;
@@ -100,6 +133,8 @@ export const addCourses = async (req: Request, res: Response) => {
                         }
                         console.log(lectureData);
                         const lecture = new LectureModel(lectureData);
+                        section.lectures.push(lecture._id);
+                        
                         await lecture.save();
                         if(!lecture){
                             res.status(400).json({
@@ -107,21 +142,23 @@ export const addCourses = async (req: Request, res: Response) => {
                                 message: 'Lecture creation failed.'
                             });
                         }
-                        const lectureId = lecture._id;
-
-                        sectionDataForLectures.push(lecture);
+                        
                         
                     }
-                    if(sectionDataForLectures.length > 0)
-                        await SectionModel.findOneAndUpdate({_id: section._id}, {$set: {lectures: sectionDataForLectures}}, {new: true});                   
+                                       
+                    course.sections.push(section._id);
+                    await section.save();
+
+                    
                 }
                 
             }
-            if(courseDataForSections.length > 0)
-                await CourseModel.findOneAndUpdate({_id: course._id}, {$set: {sections: courseDataForSections}}, {new: true});
+            await course.save();
+            /* if(courseDataForSections.length > 0)
+                await CourseModel.findOneAndUpdate({_id: course._id}, {$set: {sections: courseDataForSections}}, {new: true}); */
         }
         res.status(200).json({
-            status: false,
+            status: true,
             data: course,
             message: 'Course creation successfully.'
         });
@@ -153,7 +190,7 @@ export const updateCourses =async (req: Request, res: Response) => {
                 message: 'Course not found.'
             });
         }
-
+        //console.log(req.body);return;
         const {title, description, duration, price} = req.body;
         if(!title || !description || !duration || !price){
             return res.status(400).json({
@@ -171,7 +208,7 @@ export const updateCourses =async (req: Request, res: Response) => {
         return res.status(200).json({
             status: true,
             data: courseData,
-            message: 'Course updatd successfully.'
+            message: 'Course updated successfully.'
         }); 
     } catch (error: any) {
         console.log(error);

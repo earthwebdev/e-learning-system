@@ -14,6 +14,12 @@ import LogoutPage from './pages/logout';
 import CoursesPage from './pages/courses';
 import PrivateRoutes from './routes/PrivateRoutes';
 import CourseAddPage from './pages/courses/add';
+import EditCoursesPage from './pages/courses/edit';
+import CartPage from './pages/cart';
+import SectionPage from './pages/sections';
+import SectionAddPage from './pages/sections/add';
+import EditSectionsPage from './pages/sections/edit';
+import SuccessPage from './pages/SuccessPage';
 
 function App() {
 
@@ -30,9 +36,16 @@ function App() {
                     <Route path='/lectures/add' element={<AddLecturesPage />} />
                     <Route path='/lectures/:id' element={<EditLecturesPage />} />
                     <Route path='/courses/add' element={<CourseAddPage />} />
+                    <Route path='/courses/:id' element={<EditCoursesPage />} />
+
+                    <Route path='/sections' element={<SectionPage />} />
+                    <Route path='/sections/add' element={<SectionAddPage />} />
+                    <Route path='/sections/:id' element={<EditSectionsPage />} />
                   </Route>
-                <Route path='/courses' element={<CoursesPage />} />
-                <Route path='/logout' element={<LogoutPage />} />
+                  <Route path='/success' element={<SuccessPage />} />
+                  <Route path='/cart' element={<CartPage />} />
+                  <Route path='/courses' element={<CoursesPage />} />
+                  <Route path='/logout' element={<LogoutPage />} />
               </Route>
             </Route>
         </Routes>
