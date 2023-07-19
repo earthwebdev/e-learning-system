@@ -12,12 +12,13 @@ import 'dotenv/config';
 import passport from 'passport';
 import expressSession from 'express-session';
 import {passportInitialize} from './middlewares/passport.middleware';
+import initializeFirebaseApp from './firebase/initializeFirebase';
 
 const app = express();
 
 dbConnection();
 
-
+initializeFirebaseApp();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('tiny'));

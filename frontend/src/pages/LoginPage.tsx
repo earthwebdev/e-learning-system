@@ -6,6 +6,9 @@ import { getPostDatasFromAxios } from "../services/axios.service";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "./SignIn/authSlice";
+
+import messaging from "../config/firebase.config";
+import { getToken } from "firebase/messaging";
  
 const LoginPage = () => {
     const [email, setEmail] = useState("")
@@ -16,7 +19,7 @@ const LoginPage = () => {
     const navigate = useNavigate();
 
     const loginstate = useSelector((state: any) => state.auth.isLoggedIn);
-    console.log(loginstate, '====');
+    //console.log(loginstate, '====');
     
 
     useEffect( () => {
@@ -40,8 +43,9 @@ const LoginPage = () => {
  
         if (email && password) {
             //console.log(email, password);
-
-            const data = {email, password};
+            const token = await getToken(messaging, {vapidKey: import.meta.env.VITE_FIREBASE_VALID_KEY });
+            //console.log(token);return;
+            const data = {email, password, fcm: token};
             const resp = await getPostDatasFromAxios('/users/login', data);
             //console.log(resp.data);
             if (resp.success) {

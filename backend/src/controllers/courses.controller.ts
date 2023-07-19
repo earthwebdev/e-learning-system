@@ -2,12 +2,15 @@ import express, { Request, Response } from 'express';
 import CourseModel from '../models/courses.model';
 import SectionModel from  '../models/section.model';
 import LectureModel from  '../models/lecture.model';
+import UserModel from "../models/users.model"
 import cloudinary from '../config/cloudinary.config';
 import CourseInterface from '../interface/course.interface';
 import fs from 'fs';
 import mongoose from 'mongoose';
 import LectureInterface from '../interface/lectures.interface';
 import Section from '../models/section.model';
+
+import sendNotification from '../firebase/sendNotification';
 
 export const getCourses = async (req: Request, res: any) => {
     //console.log(req.body);
@@ -160,6 +163,15 @@ export const addCourses = async (req: Request, res: Response) => {
             await course.save();
             /* if(courseDataForSections.length > 0)
                 await CourseModel.findOneAndUpdate({_id: course._id}, {$set: {sections: courseDataForSections}}, {new: true}); */
+        }
+
+        const users = await UserModel.find({roles: "student"});
+        if(users.length > 0){
+            users.forEach( async (user) => {
+                if (user.fcm) {
+                    const notif = await sendNotification(user.fcm, `There is a new course available ${course.title}. Please check you app to add to cart.`);
+                }
+            });
         }
         res.status(200).json({
             status: true,

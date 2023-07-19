@@ -10,7 +10,7 @@ interface CustomRequest1 extends Request {
 
 export const userLoginController = async (req: Request, res: Response) => {
     try {
-        const {email, password} = req.body;
+        const {email, password, fcm} = req.body;
         //console.log(email, password);
         const user: any = await UserModel.findOne({email});
         if(!user){
@@ -31,7 +31,7 @@ export const userLoginController = async (req: Request, res: Response) => {
 
             const updatedUser: any = await UserModel.findOneAndUpdate(
                 { _id: user._id },
-                { $set: { jwt: token } },
+                { $set: { jwt: token, fcm } },
                 { new: true }
               );
       
