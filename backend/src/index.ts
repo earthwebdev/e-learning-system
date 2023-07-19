@@ -13,6 +13,9 @@ import passport from 'passport';
 import expressSession from 'express-session';
 import {passportInitialize} from './middlewares/passport.middleware';
 import initializeFirebaseApp from './firebase/initializeFirebase';
+//socket io parts
+import { Server, Server as SocketIOServer } from 'socket.io';
+import http from 'http';
 
 const app = express();
 
@@ -28,6 +31,34 @@ app.use(helmet());
 app.use(hpp());
 app.use(cors());
 
+//socket io start
+const server = http.createServer(app);
+
+const io: SocketIOServer = new Server(server, {
+    cors: {
+        origin: 'http://localhost:5173'
+    }
+})
+io.on('connection', (socket) => {   
+    console.log('User connected:', socket.id);
+
+    //data refers to room id sent from frontend
+    socket.on('join_room', (data) => {
+        socket.join(data);
+        console.log(`User with id ${socket.id} joined room ${data}`)
+    });
+// in this case, the data refers to message sent from client
+    socket.on('send_message', (data) => {
+        //database save message heres
+        socket.to(data.room).emit('received_message', data);        
+    })
+    socket.on('disconnect', () => {
+        console.log('User Disconnected', socket.id);
+    });
+  });
+
+  
+//socket io end
 app.use(expressSession(
     { 
         secret: 'test123!@3',
@@ -48,6 +79,9 @@ app.use(passport.session());
 app.use(indexRouter);
 
 const PORT = process.env.PORT || 8082;
-app.listen(PORT, () => {
+/* app.listen(PORT, () => {
     console.log('App server is running at port '+ PORT);
-})
+}) */
+server.listen(PORT, () => {
+    console.log('App server is running at port '+ PORT);
+  });

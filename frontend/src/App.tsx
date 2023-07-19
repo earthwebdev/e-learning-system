@@ -20,6 +20,7 @@ import SectionPage from './pages/sections';
 import SectionAddPage from './pages/sections/add';
 import EditSectionsPage from './pages/sections/edit';
 import SuccessPage from './pages/SuccessPage';
+import InboxPage from './pages/Inbox';
 
 function App() {
 
@@ -45,6 +46,7 @@ function App() {
                   <Route path='/success' element={<SuccessPage />} />
                   <Route path='/cart' element={<CartPage />} />
                   <Route path='/courses' element={<CoursesPage />} />
+                  <Route path="/inbox" element={<InboxPage />} />
                   <Route path='/logout' element={<LogoutPage />} />
               </Route>
             </Route>
