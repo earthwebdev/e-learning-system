@@ -4,6 +4,7 @@ import { logout } from './SignIn/authSlice'
 import { useNavigate } from 'react-router-dom';
 import { getDatasFromAxios } from '../services/axios.service';
 import {getJWTToken} from '../utils/helpers';
+import { setCookie } from '../helpers/cookies.helper';
 
 const LogoutPage = () => {
     const dispatch = useDispatch();
@@ -12,11 +13,17 @@ const LogoutPage = () => {
     const jwtToken = getJWTToken();
     //const jwtToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBldGVyQGVtYWlsLmNvbSIsImlhdCI6MTY4ODg3NzQzOSwiZXhwIjoxNjg5MTM2NjM5fQ.GiVk2UHsI5ZODG93NmY0WJjEE9JlZlDoD3l2gqAePzo';
     const getLogout = async() => {
+      setCookie('role' , '', '');
+      setCookie('jwtToken', '', '')
+        localStorage.removeItem('persist:root');
         const response: any = await getDatasFromAxios('/users/logout', jwtToken);
         console.log(response);
+        
+        localStorage.clear();
         dispatch(logout());
+        navigate('/');
     }
-    navigate('/');
+    
     useEffect(() => {
         getLogout();
     }, [])

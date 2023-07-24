@@ -48,9 +48,9 @@ const EditSectionsPage = () => {
             console.log(values); */            
             //const formData = new FormData();
             dataSection.title = values.title;
-            dataSection.description = values.description;
+            /* dataSection.description = values.description;
             dataSection.duration = values.duration;
-            dataSection.price = values.price;
+            dataSection.price = values.price; */
                                     
             console.log(dataSection);//return;
 

@@ -141,6 +141,46 @@ export const addSections = async (req: Request, res: Response) => {
         });
     }
 }
+
+export const updateSections =async (req:Request, res: Response) => {
+    const {id} = req.params;
+    if(!mongoose.Types.ObjectId.isValid(id)){
+        return res.status(400).json({
+            status: false,
+            message: 'No valid id exists.'
+        });        
+    }
+    const section = await SectionModel.findById(id).populate('lectures');
+    if (!section) {
+        res.status(400).json({
+            status: false,
+            message: 'Not found section',
+        });
+    }
+
+    const {title} = req.body;
+    if(!title){
+        res.status(400).json({
+            status: false,
+            message: 'Title is required field',
+        });
+    }
+    const data = {title};
+    const updateSection = await SectionModel.findByIdAndUpdate(id, { $set: data}, { new: true});
+    if(updateSection){
+        res.status(200).json({
+            status: true,
+            data: updateSection,
+            message: 'Section updated successfully.',
+        });
+    }else{
+        res.status(400).json({
+            status: false,
+            message: 'Section updated failed.',
+        });
+    }
+}
+
 export const deleteSections = async (req: Request, res: Response) => {
     try {
         console.log(req.params.id);

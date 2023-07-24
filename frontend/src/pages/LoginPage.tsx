@@ -9,7 +9,8 @@ import { login } from "./SignIn/authSlice";
 
 import messaging from "../config/firebase.config";
 import { getToken } from "firebase/messaging";
- 
+import { errorToast, successToast } from "../services/toastify.service";
+import { GoogleLogin } from '@react-oauth/google';
 const LoginPage = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -20,7 +21,12 @@ const LoginPage = () => {
 
     const loginstate = useSelector((state: any) => state.auth.isLoggedIn);
     //console.log(loginstate, '====');
-    
+    const SERVER_URL: any = import.meta.env.VITE_SERVER_URL;
+   //google auth success redirect funciton
+    const successResponse = ((credentialResponse: object) => {
+        console.log(credentialResponse);
+        window.location.href = SERVER_URL + '/auth/google';
+    });
 
     useEffect( () => {
         if(loginstate){
@@ -49,11 +55,11 @@ const LoginPage = () => {
             const resp = await getPostDatasFromAxios('/users/login', data);
             //console.log(resp.data);
             if (resp.success) {
-                dispatch(login(resp.data));
+                dispatch(login(resp.data));                
+                successToast(resp.message);
                 navigate("/dashboard");
-                //successToast(response.message);
               } else {
-                //errorToast(response.message);
+                errorToast(resp?.message);
               }
             if(resp.status){
                 dispatch(login(resp.data));
@@ -94,7 +100,13 @@ const LoginPage = () => {
                             sx={{mb: 3}}
                         />
                         <Button variant="outlined" color="secondary" type="submit">Login</Button>
-                    
+                        <GoogleLogin
+                            onSuccess={successResponse }
+                            onError={() => {
+                                console.log('Login Failed');
+                                navigate('/login/failed');
+                            }}
+                            />
                 </form>
                 <small>Need an account? <Link to="/register">Register here</Link></small>
             </React.Fragment>

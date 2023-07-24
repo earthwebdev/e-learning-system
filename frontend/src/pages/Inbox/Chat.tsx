@@ -71,7 +71,7 @@ const ChatPage = ({socket, username, room}: any) => {
             </ScrollToBottom>
         </div>
         <div className="chat-footer border border-t-0">
-            <input type="text" value={currentMessage} placeholder="Enter message here"
+            <input type="text" onChange={(e) => e.target.value} defaultValue={currentMessage} placeholder="Enter message here"
             className="w-full h-full border-0 text-sm outline-none cursor-pointer"
             onKeyUp={(e:any) => e.key === 'Enter' && sendMessage() } />
             <button onClick={sendMessage} 

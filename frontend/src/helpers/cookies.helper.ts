@@ -1,10 +1,10 @@
-export const getCookie = (name) => {
+export const getCookie = (name: string) => {
     const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
+    const parts: any = value.split(`; ${name}=`);
     if (parts.length === 2) return parts.pop().split(';').shift();
 }
 
-export const setCookie = (name,value,days) => {
+export const setCookie = (name: string,value: any,days: any) => {
     var expires = "";
     if (days) {
         var date = new Date();
